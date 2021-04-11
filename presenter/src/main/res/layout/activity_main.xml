@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_padding_horizontal"
+    android:paddingTop="@dimen/activity_padding_vertical"
+    android:paddingRight="@dimen/activity_padding_horizontal"
+    android:paddingBottom="@dimen/activity_padding_vertical"
+    tools:context=".view.main.MainActivity">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:id="@+id/layoutContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textViewTitle"
+                style="@style/ActivityTitleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/profile"
+                android:textColor="@color/primary_text_color"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageViewAvatar"
+                android:layout_width="@dimen/avatar_size_large"
+                android:layout_height="@dimen/avatar_size_large"
+                android:layout_marginTop="@dimen/padding_large"
+                android:layout_marginBottom="@dimen/padding_large"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewTitle" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_large"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@id/imageViewAvatar"
+                app:layout_constraintLeft_toRightOf="@id/imageViewAvatar"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/imageViewAvatar">
+
+                <TextView
+                    android:id="@+id/textViewName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textViewLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_large"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@id/imageViewAvatar" />
+
+            <TextView
+                android:id="@+id/textViewFollowers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_large"
+                android:textSize="14sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewEmail" />
+
+            <TextView
+                android:id="@+id/textViewFollowing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_large"
+                android:layout_marginTop="@dimen/padding_large"
+                android:textSize="14sp"
+                app:layout_constraintLeft_toRightOf="@id/textViewFollowers"
+                app:layout_constraintTop_toBottomOf="@id/textViewEmail" />
+
+            <TextView
+                android:id="@+id/textViewPinned"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_large"
+                android:text="@string/pinned"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewFollowers" />
+
+            <TextView
+                android:id="@+id/textViewViewAllPinned"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_large"
+                android:text="@string/view_all"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@id/textViewPinned"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewPinned"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_large"
+                app:layout_constraintTop_toBottomOf="@id/textViewPinned"
+                tools:itemCount="3"
+                tools:listitem="@layout/item_vertical_repository_list" />
+
+            <TextView
+                android:id="@+id/textViewTopRepositories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_large"
+                android:text="@string/top_repositories"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recyclerViewPinned" />
+
+            <TextView
+                android:id="@+id/textViewViewAllRepositories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_large"
+                android:text="@string/view_all"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@id/textViewTopRepositories"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewTopRepositories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_large"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/textViewTopRepositories"
+                tools:listitem="@layout/item_horizontal_repository_list" />
+
+            <TextView
+                android:id="@+id/textViewStarredRepositories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_large"
+                android:text="@string/starred_repositories"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recyclerViewTopRepositories" />
+
+            <TextView
+                android:id="@+id/textViewViewAllStarredRepositories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_large"
+                android:text="@string/view_all"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@id/textViewStarredRepositories"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewStarredRepositories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_large"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/textViewStarredRepositories"
+                tools:listitem="@layout/item_horizontal_repository_list" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

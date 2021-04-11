@@ -1,0 +1,9 @@
+include ':data'
+include ':domain'
+include ':domain'
+include ':domain-layer'
+include ':test'
+include ':domain'
+include ':presenter'
+include ':app'
+rootProject.name = "Github User Profile"

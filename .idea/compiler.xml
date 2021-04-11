@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel target="1.7">
+      <module name="Github_User_Profile.data" target="1.8" />
+      <module name="Github_User_Profile.presenter" target="1.8" />
+      <module name="Github_User_Profile.test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
