@@ -5,9 +5,13 @@
     <string name="view_all"><u>View all</u></string>
     <string name="top_repositories">Top Repositories</string>
     <string name="starred_repositories">Starred Repositories</string>
-    <string name="d_followers">%d followers</string>
     <string name="d_following">%d following</string>
     <string name="retry">Retry</string>
+
+    <plurals name="d_followers">
+        <item quantity="one">%d follower</item>
+        <item quantity="other">%d followers</item>
+    </plurals>
 
     <string name="error_unknown">Unknown error occurred. Please try again.</string>
     <string name="error_no_internet">Please check your internet connection.</string>

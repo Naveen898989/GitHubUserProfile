@@ -5,9 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_list_item"
     android:orientation="vertical"
-    android:padding="@dimen/padding_large"
-    app:cardCornerRadius="@dimen/card_corner_radius"
-    app:cardElevation="0dp">
+    android:padding="@dimen/padding_large">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,26 +21,32 @@
             android:id="@+id/textViewLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/padding_small"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/textViewName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:ellipsize="end"
-        android:textStyle="bold" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/textViewDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
-        android:lines="1" />
+        android:lines="1"
+        android:textSize="16sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="@dimen/padding_large"
         android:orientation="horizontal">
 
         <TextView
@@ -50,19 +54,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/padding_large"
-            android:drawableStart="@drawable/ic_star_24dp"
+            android:drawableStart="@drawable/ic_star_18dp"
             android:gravity="center"
-            app:drawableStartCompat="@drawable/ic_star_24dp" />
+            app:drawableStartCompat="@drawable/ic_star_18dp" />
 
         <TextView
             android:id="@+id/textViewLanguage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/padding_large"
+            android:layout_marginStart="2dp"
             android:drawableStart="@drawable/ic_language_colored_circle"
             android:drawablePadding="@dimen/padding_medium"
             android:gravity="center"
             app:drawableStartCompat="@drawable/ic_language_colored_circle" />
     </LinearLayout>
-
 </LinearLayout>

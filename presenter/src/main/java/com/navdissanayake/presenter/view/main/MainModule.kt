@@ -1,24 +1,31 @@
 package com.navdissanayake.presenter.view.main
 
 import android.app.Application
-import com.navdissanayake.data.Users
-import com.navdissanayake.presenter.di.PerScreen
+import com.navdissanayake.data.networking.GithubGraphQlApi
+import com.navdissanayake.data.repository.UsersRepository
+import com.navdissanayake.domain.repository.IUsersRepository
 import dagger.Module
 import dagger.Provides
 
 @Module
 class MainModule {
 
-    @PerScreen
+    @MainScope
     @Provides
-    fun providesUsers(application: Application) = Users(application)
+    fun provideUsersRepository(
+        application: Application,
+        githubGraphQlApi: GithubGraphQlApi
+    ): IUsersRepository {
+        return UsersRepository(application, githubGraphQlApi)
+    }
 
-    @PerScreen
+    @MainScope
     @Provides
-    fun provideMainView(mainActivity: MainActivity): MainPresenter.View = mainActivity
-
-    @PerScreen
-    @Provides
-    fun provideMainPresenter(users: Users, view: MainPresenter.View) = MainPresenter(users, view)
+    fun provideMainPresenter(
+        application: Application,
+        usersRepository: IUsersRepository
+    ): MainPresenter {
+        return MainPresenter(application, usersRepository)
+    }
 
 }

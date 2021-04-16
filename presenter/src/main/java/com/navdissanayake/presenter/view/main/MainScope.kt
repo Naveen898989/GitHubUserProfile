@@ -1,7 +1,7 @@
-package com.navdissanayake.presenter.di
+package com.navdissanayake.presenter.view.main
 
 import javax.inject.Scope
 
 @Scope
 @Retention(AnnotationRetention.RUNTIME)
-annotation class PerScreen
+annotation class MainScope

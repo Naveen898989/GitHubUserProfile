@@ -1,25 +1,30 @@
 package com.navdissanayake.presenter.view.main
 
-import android.R.color
 import android.app.Activity
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.navdissanayake.domain.model.RepositoryNode
 import com.navdissanayake.presenter.R
 
-
+/**
+ * RecyclerView adapter to display repositories. Use [setItems()][setItems] update items.
+ *
+ * @param activity Activity instance using this adapter. Used by Glide to handle lifecycle.
+ * @param itemLayoutResource Layout resource to inflate.
+ */
 class RepositoryAdapter(
     private val activity: Activity,
-    private val itemLayoutResource: Int
+    @LayoutRes private val itemLayoutResource: Int
 ) : RecyclerView.Adapter<RepositoryAdapter.ViewHolder>() {
 
     private val itemList: ArrayList<RepositoryNode> = ArrayList()
@@ -50,31 +55,33 @@ class RepositoryAdapter(
             holder.languageTextView.text = repositoryNode.languages.nodes[0].name
 
             // Tint circle
-            for (drawable in holder.languageTextView.compoundDrawablesRelative) {
-                if (drawable != null) {
-                    drawable.colorFilter = PorterDuffColorFilter(
-                        Color.parseColor(repositoryNode.languages.nodes[0].color),
-                        PorterDuff.Mode.SRC_IN
-                    )
-                }
+            val drawable: Drawable? = holder.languageTextView.compoundDrawablesRelative[0]
+            if (drawable != null) {
+                drawable.colorFilter = PorterDuffColorFilter(
+                    Color.parseColor(repositoryNode.languages.nodes[0].color),
+                    PorterDuff.Mode.SRC_IN
+                )
             }
         } else {
             holder.languageTextView.text = ""
 
-            for (drawable in holder.languageTextView.compoundDrawablesRelative) {
-                if (drawable != null) {
-                    drawable.colorFilter = PorterDuffColorFilter(
-                        Color.WHITE,
-                        PorterDuff.Mode.SRC_IN
-                    )
-                }
+            val drawable: Drawable? = holder.languageTextView.compoundDrawablesRelative[0]
+            if (drawable != null) {
+                drawable.colorFilter = PorterDuffColorFilter(
+                    Color.WHITE,
+                    PorterDuff.Mode.SRC_IN
+                )
             }
         }
     }
 
+    /**
+     * Set the items in the list and update view.
+     */
     fun setItems(itemList: List<RepositoryNode>) {
         this.itemList.clear()
         this.itemList.addAll(itemList)
+
         notifyDataSetChanged()
     }
 
