@@ -30,6 +30,9 @@ object RetrofitClient {
         this.apiAccessToken = apiAccessToken
     }
 
+    /**
+     * Github graphQl API instance.
+     */
     val githubGraphQlApi: GithubGraphQlApi by lazy {
         retrofit.create(GithubGraphQlApi::class.java)
     }

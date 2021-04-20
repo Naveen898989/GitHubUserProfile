@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -54,24 +55,24 @@ class RepositoryAdapter(
         if (repositoryNode.languages.nodes.isNotEmpty()) {
             holder.languageTextView.text = repositoryNode.languages.nodes[0].name
 
-            // Tint circle
-            val drawable: Drawable? = holder.languageTextView.compoundDrawablesRelative[0]
-            if (drawable != null) {
-                drawable.colorFilter = PorterDuffColorFilter(
-                    Color.parseColor(repositoryNode.languages.nodes[0].color),
-                    PorterDuff.Mode.SRC_IN
-                )
-            }
+            tintLanguageColorCircle(
+                holder.languageTextView,
+                Color.parseColor(repositoryNode.languages.nodes[0].color)
+            )
         } else {
             holder.languageTextView.text = ""
 
-            val drawable: Drawable? = holder.languageTextView.compoundDrawablesRelative[0]
-            if (drawable != null) {
-                drawable.colorFilter = PorterDuffColorFilter(
-                    Color.WHITE,
-                    PorterDuff.Mode.SRC_IN
-                )
-            }
+            tintLanguageColorCircle(holder.languageTextView, Color.WHITE)
+        }
+    }
+
+    private fun tintLanguageColorCircle(textView: TextView, @ColorInt color: Int) {
+        val drawable: Drawable? = textView.compoundDrawablesRelative[0]
+        if (drawable != null) {
+            drawable.colorFilter = PorterDuffColorFilter(
+                color,
+                PorterDuff.Mode.SRC_IN
+            )
         }
     }
 

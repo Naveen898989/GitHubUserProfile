@@ -9,12 +9,14 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.RequestManager
 import com.google.android.material.snackbar.Snackbar
+import com.navdissanayake.data.util.NoInternetException
 import com.navdissanayake.domain.model.User
-import com.navdissanayake.domain.repository.IUsersRepository
+import com.navdissanayake.domain.usecase.user.InvalidateCachedData
+import com.navdissanayake.domain.usecase.user.RetrieveCachedUser
+import com.navdissanayake.domain.usecase.user.RetrieveUser
 import com.navdissanayake.presenter.BuildConfig
 import com.navdissanayake.presenter.R
 import com.navdissanayake.presenter.databinding.ActivityMainBinding
-import com.navdissanayake.data.util.NoInternetException
 import com.navdissanayake.presenter.util.USER_LOGIN
 import dagger.android.DaggerActivity
 import javax.inject.Inject
@@ -30,7 +32,13 @@ class MainActivity : DaggerActivity(), MainPresenter.View {
     lateinit var glide: RequestManager
 
     @Inject
-    lateinit var usersRepository: IUsersRepository
+    lateinit var retrieveUser: RetrieveUser
+
+    @Inject
+    lateinit var retrieveCachedUser: RetrieveCachedUser
+
+    @Inject
+    lateinit var invalidateCachedData: InvalidateCachedData
 
     private val pinnedRepositoriesRecyclerAdapter =
         RepositoryAdapter(this, R.layout.item_vertical_repository_list)
@@ -48,6 +56,12 @@ class MainActivity : DaggerActivity(), MainPresenter.View {
         init()
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        attemptLoadUser()
+    }
+
     override fun onDestroy() {
         presenter.detachView()
 
@@ -60,8 +74,6 @@ class MainActivity : DaggerActivity(), MainPresenter.View {
     private fun init() {
         initPresenter()
         initViews()
-
-        attemptLoadUser()
     }
 
     override fun onRetainNonConfigurationInstance(): Any {
@@ -75,7 +87,12 @@ class MainActivity : DaggerActivity(), MainPresenter.View {
         presenter = if (lastNonConfigurationInstance != null) {
             lastNonConfigurationInstance as MainPresenter
         } else {
-            MainPresenter(applicationContext, usersRepository)
+            MainPresenter(
+                applicationContext,
+                retrieveUser,
+                retrieveCachedUser,
+                invalidateCachedData
+            )
         }
         presenter.attachView(this)
     }

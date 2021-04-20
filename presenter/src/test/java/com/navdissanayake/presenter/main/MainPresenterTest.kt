@@ -6,6 +6,9 @@ import android.net.NetworkInfo
 import com.navdissanayake.data.util.NoInternetException
 import com.navdissanayake.domain.model.*
 import com.navdissanayake.domain.repository.IUsersRepository
+import com.navdissanayake.domain.usecase.user.InvalidateCachedData
+import com.navdissanayake.domain.usecase.user.RetrieveCachedUser
+import com.navdissanayake.domain.usecase.user.RetrieveUser
 import com.navdissanayake.presenter.view.main.MainPresenter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,6 +21,8 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
+import org.mockito.internal.stubbing.answers.AnswersWithDelay
+import org.mockito.internal.stubbing.answers.Returns
 
 @ExperimentalCoroutinesApi
 @Suppress("DEPRECATION")
@@ -43,7 +48,18 @@ class MainPresenterTest {
             .thenReturn(mockedConnectivityManager)
 
         mockedUsersRepository = mock(IUsersRepository::class.java)
-        mockedMainPresenter = MainPresenter(mockedContext, mockedUsersRepository, testDispatcher)
+
+        val retrieveUser = RetrieveUser(mockedUsersRepository)
+        val retrieveCachedUser = RetrieveCachedUser(mockedUsersRepository)
+        val invalidateCachedData = InvalidateCachedData(mockedUsersRepository)
+
+        mockedMainPresenter = MainPresenter(
+            mockedContext,
+            retrieveUser,
+            retrieveCachedUser,
+            invalidateCachedData,
+            testDispatcher
+        )
 
         mockedView = mock(MainPresenter.View::class.java)
 
@@ -67,6 +83,22 @@ class MainPresenterTest {
         mockedMainPresenter.loadUser(userLogin)
 
         verify(mockedView, times(1)).showLoading()
+        verify(mockedView, times(1)).onLoadUserComplete(mockedApiUser)
+        verify(mockedView, times(1)).hideLoading()
+    }
+
+    @Test
+    fun loadUserMultipleCalls_OnlyRespondOnce() = testDispatcher.runBlockingTest {
+        mockInternetAvailable()
+        `when`(mockedUsersRepository.retrieveUser(userLogin))
+            .thenAnswer(AnswersWithDelay(1000, Returns(mockedApiUser)))
+        `when`(mockedUsersRepository.retrieveCachedUser(userLogin))
+            .thenReturn(null)
+
+        mockedMainPresenter.loadUser(userLogin)
+        mockedMainPresenter.loadUser(userLogin)
+
+        verify(mockedView, times(2)).showLoading()
         verify(mockedView, times(1)).onLoadUserComplete(mockedApiUser)
         verify(mockedView, times(1)).hideLoading()
     }

@@ -13,6 +13,10 @@ abstract class BasePresenter<View>(private val defaultDispatcher: CoroutineDispa
     private val parentJob = Job()
     private val coroutineContext: CoroutineContext
         get() = parentJob + defaultDispatcher
+
+    /**
+     * Coroutine scope for running task off main thread.
+     */
     val scope = CoroutineScope(coroutineContext)
 
     var view: View? = null

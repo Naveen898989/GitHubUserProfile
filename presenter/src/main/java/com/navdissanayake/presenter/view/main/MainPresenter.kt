@@ -2,10 +2,12 @@ package com.navdissanayake.presenter.view.main
 
 import android.content.Context
 import com.navdissanayake.data.util.Helper
-import com.navdissanayake.domain.model.User
-import com.navdissanayake.domain.repository.IUsersRepository
-import com.navdissanayake.presenter.base.BasePresenter
 import com.navdissanayake.data.util.NoInternetException
+import com.navdissanayake.domain.model.User
+import com.navdissanayake.domain.usecase.user.InvalidateCachedData
+import com.navdissanayake.domain.usecase.user.RetrieveCachedUser
+import com.navdissanayake.domain.usecase.user.RetrieveUser
+import com.navdissanayake.presenter.base.BasePresenter
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,14 +16,20 @@ import kotlinx.coroutines.withContext
 /**
  * Presenter for main screen which holds user profile info
  * @param context Context to use
- * @param usersRepository [IUsersRepository] instance to use
+ * @param retrieveUser [RetrieveUser] use case class
+ * @param retrieveCachedUser [RetrieveCachedUser] use case class
+ * @param invalidateCachedData [invalidateCachedData] use case class
  */
 class MainPresenter constructor(
     private val context: Context,
-    private val usersRepository: IUsersRepository,
+    private val retrieveUser: RetrieveUser,
+    private val retrieveCachedUser: RetrieveCachedUser,
+    private val invalidateCachedData: InvalidateCachedData,
     defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) :
     BasePresenter<MainPresenter.View>(defaultDispatcher) {
+
+    private var isLoadingUser = false
 
     /**
      * Method to retrieve user data.
@@ -36,41 +44,52 @@ class MainPresenter constructor(
     fun loadUser(userLogin: String) {
         view?.showLoading()
 
-        scope.launch {
-            var user: User? = null
-            var error: Throwable? = null
-            try {
-                if (Helper.isNetworkConnected(context)) {
-                    user = usersRepository.retrieveUser(userLogin)
-                } else {
-                    user = usersRepository.retrieveCachedUser(userLogin)
+        if (!isLoadingUser) {
+            scope.launch {
+                isLoadingUser = true
 
-                    // Only throw no internet error if no cache is found
-                    if (user == null) {
-                        error =
-                            NoInternetException()
-                    }
-                }
-            } catch (e: Exception) {
-                error = e
-            }
+                var user: User? = null
+                var error: Throwable? = null
+                try {
+                    if (Helper.isNetworkConnected(context)) {
+                        user = retrieveUser.execute(RetrieveUser.RequestValues(userLogin))
+                    } else {
+                        user =
+                            retrieveCachedUser.execute(RetrieveCachedUser.RequestValues(userLogin))
 
-            withContext(Dispatchers.Main) {
-                when {
-                    error != null -> {
-                        view?.onLoadUserError(error)
+                        // Only throw no internet error if no cache is found
+                        if (user == null) {
+                            error =
+                                NoInternetException()
+                        }
                     }
-                    user != null -> {
-                        view?.onLoadUserComplete(user)
-                    }
-                    else -> {
-                        // Shouldn't happen
-                        view?.onLoadUserError(IllegalStateException("Unknown error occurred"))
-                    }
+                } catch (e: Exception) {
+                    error = e
                 }
 
-                view?.hideLoading()
+                notifyView(error, user)
+
+                isLoadingUser = false
             }
+        }
+    }
+
+    private suspend fun notifyView(error: Throwable?, user: User?) {
+        withContext(Dispatchers.Main) {
+            when {
+                error != null -> {
+                    view?.onLoadUserError(error)
+                }
+                user != null -> {
+                    view?.onLoadUserComplete(user)
+                }
+                else -> {
+                    // Shouldn't happen
+                    view?.onLoadUserError(IllegalStateException("Unknown error occurred"))
+                }
+            }
+
+            view?.hideLoading()
         }
     }
 
@@ -79,7 +98,7 @@ class MainPresenter constructor(
      */
     fun invalidateCache() {
         scope.launch {
-            usersRepository.invalidateCachedData()
+            invalidateCachedData.execute(InvalidateCachedData.RequestValues())
         }
     }
 
